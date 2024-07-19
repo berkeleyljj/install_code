@@ -33,11 +33,6 @@ def main():
         print("Failed to set up pdm")
         sys.exit(1)
 
-    all_repos = sorted(os.listdir(REPOS_DIR))
-
-    if repo_name not in all_repos:
-        print(f"Repository {repo_name} not found in {REPOS_DIR}")
-        sys.exit(1)
 
     # Install the single repository
     try:
