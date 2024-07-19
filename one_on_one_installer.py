@@ -16,7 +16,7 @@ def main():
 
     # Modify pdm
     print(f"Setting up pdm...")
-    print(PDM_BIN_DIR)
+    print("PDM bin dir is", PDM_BIN_DIR)
     result = run_subprocess_shell(
         f"export PATH={PDM_BIN_DIR} \
             && pdm --version \
