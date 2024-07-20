@@ -2,21 +2,16 @@ import os
 import sys
 
 from paths import REPOS_DIR, PDM_BIN_DIR
+from multiprocess_utils import run_tasks_in_parallel_iter
 from bash_utils import run_subprocess_shell
 from install_single_repo import install_single_repo
 
 
 def main():
-    # Ensure a repository name is provided
-    if len(sys.argv) < 2:
-        print("Usage: python parallel_installer.py <repo_name>")
-        sys.exit(1)
-
-    repo_name = sys.argv[1]
-
     # Modify pdm
     print(f"Setting up pdm...")
-    print("PDM bin dir is", PDM_BIN_DIR)
+
+
     result = run_subprocess_shell(
         f"export PATH={PDM_BIN_DIR} \
             && pdm --version \
@@ -29,17 +24,17 @@ def main():
         ",
     )
 
-    if result.returncode != 0:
-        print("Failed to set up pdm")
-        sys.exit(1)
+    results = run_tasks_in_parallel_iter(
+        install_single_repo,
+        num_workers=1,
+        use_progress_bar=True,
+    )
 
-
-    # Install the single repository
-    try:
-        install_single_repo(repo_name)
-    except Exception as e:
-        print(f"Failed to install {repo_name}: {e}")
-        sys.exit(1)
+    for output in results:
+        if output.is_success():
+            pass
+        else:
+            print(output.exception_tb)
 
 
 if __name__ == "__main__":
