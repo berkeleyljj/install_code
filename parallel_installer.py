@@ -28,6 +28,7 @@ def main():
         ",
     )
 
+    print(result)
     all_repos = sorted(os.listdir(REPOS_DIR))
     all_repos = all_repos[start:end]
 
